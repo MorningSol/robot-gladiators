@@ -24,14 +24,17 @@ var fight = function(enemyName) {
             if (confirmSkip) {
                 window.alert(playerName + " has decided to skip this fight. Goodbye!");
                 
-                playerMoney =  playerMoney - 10;
+                playerMoney = Math.max(0, playerMoney - 10);
                 console.log("playerMoney", playerMoney);
                 break;
             }
         }
 
         // remove enemy's health by subtracting the amount set in the playerAttack variable
-        enemyHealth = enemyHealth - playerAttack;
+        // generate random damage value based on player's attack power
+        var damage = randomNumber(playerAttack - 3, playerAttack);
+        console.log(damage);
+        enemyHealth = Math.max(0, enemyHealth - damage);
         console.log(
         playerName + ' attacked ' + enemyName + '. ' + enemyName + ' now has ' + enemyHealth + ' health remaining.'
         );
@@ -50,7 +53,9 @@ var fight = function(enemyName) {
         }
 
         // remove players's health by subtracting the amount set in the enemyAttack variable
-        playerHealth = playerHealth - enemyAttack;
+        var damage = randomNumber(enemyAttack - 3, enemyAttack);
+        console.log(damage);
+        playerHealth = Math.max(0, playerHealth - damage);
         console.log(
         enemyName + ' attacked ' + playerName + '. ' + playerName + ' now has ' + playerHealth + ' health remaining.'
         );
@@ -65,6 +70,7 @@ var fight = function(enemyName) {
         }
     }
 };
+
 var startGame = function() {
     //rest player health
     playerHealth = 100;
@@ -77,7 +83,7 @@ var startGame = function() {
             
             var pickedEnemyName = enemyNames[i];
             
-            enemyHealth = 50;
+            enemyHealth = randomNumber(40, 60)
             
             fight(pickedEnemyName)
             // if we're nat at the last enemy in the array
@@ -97,6 +103,7 @@ var startGame = function() {
     }
     endGame();
 };
+
 
 // funtion to end the entire game
 var endGame = function() {
@@ -124,8 +131,8 @@ var shop = function() {
     var shopOptionPrompt = window.prompt(
         "Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? Please enter one: 'REFILL', 'UPGRADE', or 'LEAVE' to make a choice."
     );
-// use switch to carry out action
-switch (shopOptionPrompt) {
+    // use switch to carry out action
+    switch (shopOptionPrompt) {
     case "REFILL":
     case "refill":
         if (playerMoney >= 7) {
@@ -160,10 +167,16 @@ switch (shopOptionPrompt) {
     default:
         window.alert("You did not pick a valid option. Try again.");
         shop();
-        break;   
-}
-
+        break;  
+    } 
 };
+
+var randomNumber = function(min, max) {
+    var value = Math.floor(Math.random() * (max - min +1) + min);
+    return value;
+};
+
+
 
 // start the game when page loads
 startGame();
